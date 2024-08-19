@@ -1,16 +1,34 @@
-import React, { useState } from "react";
-import AdminNavBar from "./AdminNavBar";
-import QuestionForm from "./QuestionForm";
-import QuestionList from "./QuestionList";
+import React, { useState } from 'react';
+import QuestionList from './QuestionList';
+import QuestionForm from './QuestionForm';
+//import App from '../App'; 
 
 function App() {
-  const [page, setPage] = useState("List");
+  const [questions, setQuestions] = useState([]);
+
+  const handleQuestionAdded = (newQuestion) => {
+    setQuestions([...questions, newQuestion]);
+  };
+
+  const handleQuestionDeleted = (id) => {
+    setQuestions(questions.filter(question => question.id !== id));
+  };
+
+  const handleQuestionUpdated = (updatedQuestion) => {
+    setQuestions(questions.map(question =>
+      question.id === updatedQuestion.id ? updatedQuestion : question
+    ));
+  };
 
   return (
-    <main>
-      <AdminNavBar onChangePage={setPage} />
-      {page === "Form" ? <QuestionForm /> : <QuestionList />}
-    </main>
+    <div>
+      <QuestionForm onQuestionAdded={handleQuestionAdded} />
+      <QuestionList
+        questions={questions}
+        onQuestionDeleted={handleQuestionDeleted}
+        onQuestionUpdated={handleQuestionUpdated}
+      />
+    </div>
   );
 }
 
